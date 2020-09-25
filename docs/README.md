@@ -1,12 +1,13 @@
 # Semantic Segmentation Suite in TensorFlow
+-This is an Original repository from George Seif (https://github.com/GeorgeSeif/Semantic-Segmentation-Suite)
 
-![alt-text-10](https://github.com/GeorgeSeif/Semantic-Segmentation-Suite/blob/master/Images/semseg.gif)
+The modifications to the original code include:
+- Adaptation for the training of microscopy cell images
+- Probability sampling distribution function to the training.
+- Decreasing learning rate strategy for the training.
+- Save the modifications to .csv file
 
-## News
 
-### What's New
-
-- This repo has been depricated and will no longer be handling issues. Feel free to use as is :)
 
 ## Description
 This repository serves as a Semantic Segmentation Suite. The goal is to easily be able to implement, train, and test new Semantic Segmentation models! Complete with the following:
@@ -18,13 +19,6 @@ This repository serves as a Semantic Segmentation Suite. The goal is to easily b
 - Evaluation including precision, recall, f1 score, average accuracy, per-class accuracy, and mean IoU
 - Plotting of loss function and accuracy over epochs
 
-**Any suggestions to improve this repository, including any new segmentation models you would like to see are welcome!**
-
-You can also check out my [Transfer Learning Suite](https://github.com/GeorgeSeif/Transfer-Learning-Suite).
-
-## Citing
-
-If you find this repository useful, please consider citing it using a link to the repo :)
 
 ## Frontends
 
@@ -73,19 +67,15 @@ to obtain robust features for recognition. The two streams are coupled at the fu
 ## Files and Directories
 
 
-- **train.py:** Training on the dataset of your choice. Default is CamVid
+- **train4drive.py:** Training on the dataset of your choice. 
 
-- **test.py:** Testing on the dataset of your choice. Default is CamVid
-
-- **predict.py:** Use your newly trained model to run a prediction on a single image
+- **test.py:** Testing on the dataset of your choice. 
 
 - **helper.py:** Quick helper functions for data preparation and visualization
 
 - **utils.py:** Utilities for printing, debugging, testing, and evaluation
 
 - **models:** Folder containing all model files. Use this to build your models, or use a pre-built one
-
-- **CamVid:** The CamVid datatset for Semantic Segmentation as a test bed. This is the 32 class version
 
 - **checkpoints:** Checkpoint files for each epoch during training
 
@@ -112,42 +102,13 @@ The only thing you have to do to get started is set up the folders in the follow
     |   ├── test
     |   ├── test_labels
 
-Put a text file under the dataset directory called "class_dict.csv" which contains the list of classes along with the R, G, B colour labels to visualize the segmentation results. This kind of dictionairy is usually supplied with the dataset. Here is an example for the CamVid dataset:
+Put a text file under the dataset directory called "class_dict.csv" which contains the list of classes along with the labels to visualize the segmentation results. This kind of dictionairy is usually supplied with the dataset. Here is an example:
 
 ```
-name,r,g,b
-Animal,64,128,64
-Archway,192,0,128
-Bicyclist,0,128, 192
-Bridge,0, 128, 64
-Building,128, 0, 0
-Car,64, 0, 128
-CartLuggagePram,64, 0, 192
-Child,192, 128, 64
-Column_Pole,192, 192, 128
-Fence,64, 64, 128
-LaneMkgsDriv,128, 0, 192
-LaneMkgsNonDriv,192, 0, 64
-Misc_Text,128, 128, 64
-MotorcycleScooter,192, 0, 192
-OtherMoving,128, 64, 64
-ParkingBlock,64, 192, 128
-Pedestrian,64, 64, 0
-Road,128, 64, 128
-RoadShoulder,128, 128, 192
-Sidewalk,0, 0, 192
-SignSymbol,192, 128, 128
-Sky,128, 128, 128
-SUVPickupTruck,64, 128,192
-TrafficCone,0, 0, 64
-TrafficLight,0, 64, 64
-Train,192, 64, 128
-Tree,128, 128, 0
-Truck_Bus,192, 128, 192
-Tunnel,64, 0, 64
-VegetationMisc,192, 192, 0
-Void,0, 0, 0
-Wall,64, 192, 0
+name,value
+Cell,1
+Background,0
+
 ```
 
 **Note:** If you are using any of the networks that rely on a pre-trained ResNet, then you will need to download the pre-trained weights using the provided script. These are currently: PSPNet, RefineNet, DeepLabV3, DeepLabV3+, GCN.
@@ -201,42 +162,7 @@ optional arguments:
                         supported models
   --frontend FRONTEND   The frontend you are using. See frontend_builder.py
                         for supported models
+                
 
 ```
     
-
-## Results
-
-These are some **sample results** for the CamVid dataset with 11 classes (previous research version).
-
-In training, I used a batch size of 1 and image size of 352x480. The following results are for the FC-DenseNet103 model trained for 300 epochs. I used RMSProp with learning rate 0.001 and decay 0.995. I **did not** use any data augmentation like in the paper. I also didn't use any class balancing. These are just some quick and dirty example results.
-
-**Note that the checkpoint files are not uploaded to this repository since they are too big for GitHub (greater than 100 MB)**
-
-
-| Class 	| Original Accuracy  	| My Accuracy |
-| ------------- 		| ------------- | -------------|
-| Sky  		| 93.0 | 94.1  |
-| Building 		| 83.0  | 81.2  |
-| Pole  		| 37.8  | 38.3  |
-| Road 		| 94.5  | 97.5  |
-| Pavement  		| 82.2  | 87.9  |
-| Tree 		| 77.3  | 75.5  |
-| SignSymbol  		| 43.9  | 49.7  |
-| Fence 		| 37.1  | 69.0  |
-| Car  		| 77.3  | 87.0  |
-| Pedestrian 		| 59.6  | 60.3  |
-| Bicyclist  		| 50.5  | 75.3  |
-| Unlabelled 		| N/A  | 40.9  |
-| Global  		| 91.5 | 89.6  |
-
-
-Loss vs Epochs            |  Val. Acc. vs Epochs
-:-------------------------:|:-------------------------:
-![alt text-1](https://github.com/GeorgeSeif/FC-DenseNet-Tiramisu/blob/master/Images/loss_vs_epochs.png)  |  ![alt text-2](https://github.com/GeorgeSeif/FC-DenseNet-Tiramisu/blob/master/Images/accuracy_vs_epochs.png)
-
-
-Original            |  GT   |  Result
-:-------------------------:|:-------------------------:|:-------------------------:
-![alt-text-3](https://github.com/GeorgeSeif/FC-DenseNet-Tiramisu/blob/master/Images/0001TP_008550.png "Original")  |  ![alt-text-4](https://github.com/GeorgeSeif/FC-DenseNet-Tiramisu/blob/master/Images/0001TP_008550_gt.png "GT")  |   ![alt-text-5](https://github.com/GeorgeSeif/FC-DenseNet-Tiramisu/blob/master/Images/0001TP_008550_pred.png "Result")
-
